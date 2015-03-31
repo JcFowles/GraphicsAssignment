@@ -13,6 +13,9 @@
 
 // Library Includes
 #include <d3dx9.h>
+#include <math.h>
+
+//local includes
 #include "Mesh.h"
 #include "Vertex.h"
 
@@ -25,31 +28,40 @@ public:
 
 	bool Initialise(CMesh* _pMesh, IDirect3DDevice9* _d3dDev, D3DXMATRIX* _CameraView, float _fX, float _fY, float _fZ);
 	
+	void SetTilt(float _fYTilt, float _fXTilt, float _fZTilt);
 	void SetMesh(CMesh* _pMesh);
 	
 	void SetX(float _f);
 	void SetY(float _f);
 	void SetZ(float _f);
-
+	void SetSpeed(float _f);
+		
 	void SetYaw(float _f);		//Rotation on Y
 	void SetPitch(float _f);	//Rotation on X
 	void SetRoll(float _f);		//Rotation on Z
 
 	void ReadyVertexBuffer();
 	void Draw();
-	void Process(float _fDeltaTick);
-	void CalcWorldMatrix();
+	void Process(float _fDeltaTick, D3DXMATRIX _CameraView);
+	void CalcTransformMatrix();
+		
 
 private:
+
+	float m_fOneDegree; 
+
 	// Member Variables
 	CMesh* m_pMesh;
 	
 	IDirect3DVertexBuffer9* m_pD3DVertexBuffer;
 	IDirect3DDevice9* m_pD3DDevice;
-	
-	vector<CVertex> m_vectAllVertices;
-	
+		
 	D3DXMATRIX m_matWorld;
+	D3DXMATRIX m_matCube;
+
+	float m_fTiltYAxis;
+	float m_fTiltXAxis;
+	float m_fTiltZAxis;
 
 	float m_fRotationYaw;
 	float m_fRotationPitch;
@@ -61,4 +73,5 @@ private:
 
 	D3DXMATRIX m_CameraView;
 
+	float m_fRotationSpeed;
 };

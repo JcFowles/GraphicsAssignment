@@ -28,6 +28,7 @@
 
 
 using namespace std;
+//CGame g_rGame = CGame::GetInstance();
 
 /***********************
 * WindowProc: This is the message handler for the Window, 
@@ -51,6 +52,32 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
                 PostQuitMessage(0);
                 return 0;
             } break;
+		case WM_KEYDOWN:
+			{
+				switch(_wParam)
+				{
+				case VK_NUMPAD1:
+					{
+						CGame::GetInstance().ToggleFillMode();
+					}
+					break;
+				case VK_NUMPAD2:
+					{
+						CGame::GetInstance().ToggleShader();
+					}
+					break;
+				case VK_LEFT:
+					{
+						D3DXVECTOR3 CamPos;
+						CamPos = *(CGame::GetInstance().GetCameraPosition());
+						CamPos.x += 1;
+						(CGame::GetInstance().SetCameraPosition(CamPos));
+
+					}
+					break;
+				}
+			}
+			break;
     }
 
 
@@ -146,6 +173,9 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LP
 ********************/
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _iCmdshow)
 {
+	//Seed the random generator
+	srand ((unsigned int)time(NULL));
+
 	//Screen Resolution
 	const int kiWidth = 1920; //500
 	const int kiHeight = 1200; //400
@@ -163,8 +193,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
     ShowWindow(hWnd, _iCmdshow);
 
 	//Create and initialize the Direct3D Device
-	CGame* pGame = new CGame;
-	pGame->Initialize(hWnd);
+	CGame& g_rGame = CGame::GetInstance();
+
+	g_rGame.Initialize(hWnd);
 			
 
 	while (msg.message != WM_QUIT)
@@ -177,7 +208,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		else
 		{
 			//Render a single frame
-			pGame->RenderFrame();		
+			g_rGame.RenderFrame();		
 		}
 	}
 

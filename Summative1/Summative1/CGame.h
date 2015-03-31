@@ -27,8 +27,10 @@ class CGame
 {
 public:
 	//Member Function
+	//Singleton Methods
+	static CGame& GetInstance();
+	static void DestroyInstance();
 
-	CGame(void);
 	~CGame(void);
 
 	void Initialize(HWND _hWnd);    //Initializes the Direct3D
@@ -37,26 +39,44 @@ public:
 	void Process(float _fDeltaTick);
 	
 	void RenderFrame(void);				//Renders a single frame
+	
+	void DrawObjects();
+
+	IDirect3DDevice9* GetDevice();
+
+	void ToggleShader();
+	void ToggleFillMode();
+
+	D3DXVECTOR3* GetCameraPosition();
+	void SetCameraPosition(D3DXVECTOR3 _CameraPosition);
+
+protected:
+	CGame();
 
 	CMesh* CreateMesh();
 	void CreateObject();
-
-	void DrawObjects();
-
 	
 private:
 	// Member Variables
+	static CGame* s_pGame;
+
 	CClock* m_pClock;
-	HWND m_hMainWindow;
+	//HWND m_hMainWindow;
 
 	IDirect3D9* m_pD3DInterface;
 	IDirect3DDevice9* m_pD3DDevice;
-	PDIRECT3DVERTEXBUFFER9 m_D3DVertexBuffer;
+	
 	CMesh* m_pCubeMesh;
 	
 	vector<C3DObject> m_vectObject;
 
 	D3DXMATRIX m_CameraView;
 
+	bool m_bShadeFlat;
+	bool m_bFillSolid;
+
+	D3DXVECTOR3 m_CameraPosition;
+	D3DXVECTOR3 m_LookUp;
+	D3DXVECTOR3 m_LookAt;
 };
 

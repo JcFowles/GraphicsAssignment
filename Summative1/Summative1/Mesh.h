@@ -33,10 +33,17 @@ public:
 
 	void AddPolygon(CPolygon* _pPolygon);
 	vector<CPolygon>* GetPolygons();
+	vector<CVertex> GetVertices();
 
-	void Draw(D3DXMATRIX _WorldMatrix);
+	void Draw(IDirect3DDevice9* _pD3DDevice);
+
+	void SetVertices();
+
+	void CMesh::ReadyVertexBuffer(IDirect3DDevice9* _pD3DDevice);
 	
 private:
 	// Member Variables
 	vector<CPolygon> m_vecPolygons;
+	vector<CVertex> m_vectAllVertices;
+	IDirect3DVertexBuffer9* m_pD3DVertexBuffer;
 };
