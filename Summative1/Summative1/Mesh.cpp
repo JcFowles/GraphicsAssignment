@@ -14,6 +14,7 @@
 
 //This Include
 #include "Mesh.h"
+#include "CGame.h"
 
 /***********************
 * CMesh: Defualt Constructor of the Mesh 
@@ -112,6 +113,7 @@ void CMesh::SetVertices()
 		for( unsigned int k = 0; k < (*(m_vecPolygons)[i].GetVertices()).size(); k++)
 		//Loop through all Polygons Vertices
 		{
+			//(*(m_vecPolygons)[i].GetVertices())[k].SetColor(CGame::GetInstance().GetRandomColor());
 			m_vectAllVertices.push_back( (*(m_vecPolygons)[i].GetVertices())[k]);
 		}
 	}

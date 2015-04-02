@@ -196,16 +196,16 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LP
 	
 
 	//Full Screen
-	//hWnd = CreateWindowEx(	NULL,												// Extend style.
-	//						WINDOW_CLASS_NAME,									// Class.		
-	//						_pcTitle,											// Title.
-	//						WS_EX_TOPMOST | WS_POPUP,							// Window stlye (fullscreen values)
-	//						0, 0,												// Initial x,y.
-	//						_iWidth, _iHeight,									// Initial width, height.
-	//						NULL,												// Handle to parent.
-	//						NULL,												// Handle to menu.
-	//						_hInstance,											// Instance of this application.
-	//						NULL);												// Extra creation parameters.
+	hWnd = CreateWindowEx(	NULL,												// Extend style.
+							WINDOW_CLASS_NAME,									// Class.		
+							_pcTitle,											// Title.
+							WS_EX_TOPMOST | WS_POPUP,							// Window stlye (fullscreen values)
+							0, 0,												// Initial x,y.
+							_iWidth, _iHeight,									// Initial width, height.
+							NULL,												// Handle to parent.
+							NULL,												// Handle to menu.
+							_hInstance,											// Instance of this application.
+							NULL);												// Extra creation parameters.
 	
 
 	//Check if window was created succesfully

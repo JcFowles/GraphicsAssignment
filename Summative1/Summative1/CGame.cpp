@@ -153,7 +153,7 @@ void CGame::Initialize(HWND _hWnd, int _iScreenWidth, int _iScreenHeight)
 	objCube1.Initialise(m_pCubeMesh, m_pD3DDevice,&m_CameraView, -1*fFromCentre, 0, 0);
 	objCube1.SetTilt(0, 0, 0);
 	objCube1.SetRoll(1.0f);
-	objCube1.SetSpeed(30);
+	objCube1.SetSpeed(30.0f);		//magic number 22403
 
 	m_vectObject.push_back(objCube1);
 
@@ -214,13 +214,11 @@ void CGame::Process(float _fDeltaTick)
 	//Process the camera View
 	D3DXMatrixLookAtLH(&m_CameraView, &m_CameraPosition, &m_LookAt, &m_LookUp);
 
-
 	//Process all the cubes
 	for(unsigned int i = 0; i < m_vectObject.size(); i++)
 	{
 		m_vectObject[i].Process(_fDeltaTick,m_CameraView);
 	}	
-	
 	
 }
 
