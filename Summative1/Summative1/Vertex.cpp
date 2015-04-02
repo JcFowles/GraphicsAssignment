@@ -143,4 +143,14 @@ void CVertex::SetColor(int _iR, int _iG, int _iB)
 	m_color = newColor;
 }
 
+/***********************
+* SetColor: Sets the color of the position vector
+* @author: Jc Fowles
+* @parameter: _Color: RGB color to set the vertex to
+* @return: void
+********************/
+void CVertex::SetColor(COLORREF _Color)
+{
+	m_color = _Color;
+}
 

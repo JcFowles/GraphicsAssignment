@@ -20,9 +20,14 @@
 * @author: Jc Fowles
 * @return: 
 ********************/
-C3DObject::C3DObject()
+C3DObject::C3DObject(float _fScreenWidth, float _fScreenHeight)
 {
 	m_fOneDegree = (float)(std::atan(1.0)*4)/180;
+	m_fScreenWidth = _fScreenWidth;
+	m_fScreenHeight = _fScreenHeight;
+	m_fTiltYAxis = 0;
+	m_fTiltXAxis = 0;
+	m_fTiltZAxis = 0;
 }
 
 /***********************
@@ -32,10 +37,6 @@ C3DObject::C3DObject()
 ********************/
 C3DObject::~C3DObject()
 {
-	//CMesh* m_pMesh;
-	
-	//m_pD3DVertexBuffer->Release();
-	//m_pD3DDevice->Release();
 }
 
 /***********************
@@ -61,7 +62,7 @@ bool C3DObject::Initialise(CMesh* _pMesh, IDirect3DDevice9* _d3dDev, D3DXMATRIX*
 	m_fRotationPitch = 0.0f;
 	m_fRotationRoll = 0.0f;
 
-	m_pMesh->ReadyVertexBuffer(m_pD3DDevice);
+	//m_pMesh->ReadyVertexBuffer(m_pD3DDevice);
 		
 	return true;
 }
@@ -72,11 +73,11 @@ bool C3DObject::Initialise(CMesh* _pMesh, IDirect3DDevice9* _d3dDev, D3DXMATRIX*
 * @parameter: _pMesh: Pointer to the Mesh data
 * @return: void
 ********************/
-void C3DObject::SetTilt(float _fYTilt, float _fXTilt, float _fZTilt)
+void C3DObject::SetTilt(float _fXTilt, float _fYTilt, float _fZTilt)
 {
-	m_fTiltYAxis = _fYTilt;
-	m_fTiltXAxis = _fXTilt;
-	m_fTiltZAxis = _fZTilt;
+	m_fTiltYAxis = _fYTilt*m_fOneDegree;
+	m_fTiltXAxis = _fXTilt*m_fOneDegree;
+	m_fTiltZAxis = _fZTilt*m_fOneDegree;
 }
 
 /***********************
@@ -198,21 +199,7 @@ void C3DObject::Process(float _fDeltaTick, D3DXMATRIX _CameraView)
 	m_fTiltYAxis += m_fRotationYaw *  (fSpeed*_fDeltaTick);
 	m_fTiltXAxis += m_fRotationPitch * (fSpeed*_fDeltaTick);
 	m_fTiltZAxis += m_fRotationRoll * (fSpeed*_fDeltaTick);
-
 	
-
-	//Random Rapid Changeing colors(Not Keeping but is cool)
-	/*
-	int iRandomRed;
-	int iRandomGreen; 
-	int iRandomBlue;
-	for(unsigned int i = 0; i < m_vectAllVertices.size(); i++)
-	{
-		iRandomRed = rand() % 255;
-		iRandomGreen = rand() % 255;
-		iRandomBlue = rand() % 255;
-		m_vectAllVertices[i].SetColor(iRandomRed,iRandomGreen,iRandomBlue);
-	}*/
 }
 
 /***********************
@@ -222,24 +209,48 @@ void C3DObject::Process(float _fDeltaTick, D3DXMATRIX _CameraView)
 ********************/
 void C3DObject::CalcTransformMatrix()
 {
+	D3DXMATRIX RotateX;
+	D3DXMATRIX RotateY;
+	D3DXMATRIX RotateZ;
+	
 	//Set the world matrix to the identity, reset the world matrix 	
     D3DXMatrixIdentity(&m_matWorld);  
-
-	//Rotate the Cube
-	D3DXMatrixRotationYawPitchRoll(&m_matWorld, m_fTiltYAxis, m_fTiltXAxis, m_fTiltZAxis);
+	/*D3DXMatrixIdentity(&RotateX);  
+	D3DXMatrixIdentity(&RotateY);  
+	D3DXMatrixIdentity(&RotateZ);  */
 	
 	//Translate the Cube
-	D3DXMATRIX tempMat;
-	D3DXMatrixTranslation(&tempMat, m_fX, m_fY, m_fZ);
-	m_matWorld *= tempMat;
+	D3DXMATRIX translateMat;
+	//D3DXMatrixIdentity(&translateMat); 
+	D3DXMatrixTranslation(&translateMat, m_fX, m_fY, m_fZ);
+
+
+	//Rotate the Cube
 	
+	/*if(m_fRotationRoll > 0)
+	{
+		D3DXMatrixRotationY(&RotateY, m_fTiltYAxis);
+		D3DXMatrixRotationX(&RotateX, m_fTiltXAxis);
+		D3DXMatrixRotationZ(&RotateZ, m_fTiltZAxis);
+		m_matWorld = RotateY*RotateX*RotateZ;
+	}
+	
+
+	if(m_fRotationYaw > 0)
+	{*/
+		D3DXMatrixRotationYawPitchRoll(&m_matWorld, m_fTiltYAxis, m_fTiltXAxis, m_fTiltZAxis);
+	//}
+		
+	m_matWorld *= translateMat;
+	float fAspectRatio = m_fScreenWidth/m_fScreenHeight;
+
 	//Calculate the Projection matrix of our D3D Device
     D3DXMATRIX matProjection;
 	D3DXMatrixPerspectiveFovLH(&matProjection,
-                               D3DXToRadian(45),			//Tthe horizontal field of view
-                               (FLOAT)1920 / (FLOAT)1200,	//Aspect ratio
-                               100.0f,						//The near view-plane
-                               1500.0f);					//The far view-plane
+                               D3DXToRadian(45*fAspectRatio),									//Tthe horizontal field of view
+                               (FLOAT)fAspectRatio,		//Aspect ratio
+                               1.0f,												//The near view-plane
+                               10000.0f);											//The far view-plane
 
 
     //Set the world matrix of our D3D Device

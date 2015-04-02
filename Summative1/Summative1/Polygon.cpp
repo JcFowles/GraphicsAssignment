@@ -43,13 +43,6 @@ CPolygon::CPolygon(CVertex* _pVertA, CVertex* _pVertB, CVertex* _pVertC)
 ********************/
 CPolygon::~CPolygon()
 {
-	/*while(!(m_vecVertices->empty()))
-	{
-		delete m_vecVertices->back();
-		m_vecVertices->pop_back();
-	}
-	delete m_vecVertices;
-	m_vecVertices = 0;*/
 }
 
 /***********************

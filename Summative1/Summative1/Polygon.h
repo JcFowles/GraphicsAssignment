@@ -15,7 +15,6 @@
 #pragma once
 
 // Library Includes
-#include <d3dx9.h>
 #include <vector>
 
 // Local Includes

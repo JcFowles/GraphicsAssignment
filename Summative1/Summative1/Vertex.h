@@ -37,6 +37,7 @@ public:
 	void SetY(float _f);
 	void SetZ(float _f);
 	void SetColor(int _iR, int _iG, int _iB);
+	void SetColor(COLORREF _Color);
 	
 protected:
 	// Member Variables

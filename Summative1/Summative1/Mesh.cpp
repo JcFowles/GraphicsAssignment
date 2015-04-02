@@ -32,6 +32,19 @@ CMesh::CMesh()
 ********************/
 CMesh::~CMesh()
 {
+	m_pD3DVertexBuffer->Release();
+	m_pD3DVertexBuffer = 0;
+}
+
+/***********************
+* Release: Releases the D3DirectX objects
+* @author: Jc Fowles
+* @return: void
+********************/
+void CMesh::Release()
+{
+	m_pD3DVertexBuffer->Release();
+	m_pD3DVertexBuffer = 0;
 }
 
 /***********************
@@ -83,6 +96,7 @@ void CMesh::Draw(IDirect3DDevice9* _pD3DDevice)
 
     //Draw the vertex buffer into the backbuffer
     _pD3DDevice->DrawPrimitive(D3DPT_TRIANGLELIST, 0, iNumOfPolygons);
+
 }
 
 /***********************

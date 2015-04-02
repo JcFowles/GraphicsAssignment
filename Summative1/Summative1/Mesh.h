@@ -14,14 +14,8 @@
 
 #pragma once
 
-// Library Includes
-#include <d3dx9.h>
-#include <vector>
-
 //Local Includes
 #include "Polygon.h"
-
-using namespace std; 
 
 class CPolygon;
 class CMesh
@@ -30,6 +24,7 @@ public:
 	// Member Functions
 	CMesh();
 	~CMesh();
+	void Release();
 
 	void AddPolygon(CPolygon* _pPolygon);
 	vector<CPolygon>* GetPolygons();
@@ -39,7 +34,7 @@ public:
 
 	void SetVertices();
 
-	void CMesh::ReadyVertexBuffer(IDirect3DDevice9* _pD3DDevice);
+	void ReadyVertexBuffer(IDirect3DDevice9* _pD3DDevice);
 	
 private:
 	// Member Variables

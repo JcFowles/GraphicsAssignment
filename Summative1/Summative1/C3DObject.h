@@ -11,10 +11,6 @@
 
 #pragma once
 
-// Library Includes
-#include <d3dx9.h>
-#include <math.h>
-
 //local includes
 #include "Mesh.h"
 #include "Vertex.h"
@@ -23,7 +19,7 @@ class C3DObject
 {
 public:
 	// Member Functions
-	C3DObject();
+	C3DObject(float _fScreenHeight, float _fScreenWidth);
 	~C3DObject();
 
 	bool Initialise(CMesh* _pMesh, IDirect3DDevice9* _d3dDev, D3DXMATRIX* _CameraView, float _fX, float _fY, float _fZ);
@@ -40,7 +36,6 @@ public:
 	void SetPitch(float _f);	//Rotation on X
 	void SetRoll(float _f);		//Rotation on Z
 
-	void ReadyVertexBuffer();
 	void Draw();
 	void Process(float _fDeltaTick, D3DXMATRIX _CameraView);
 	void CalcTransformMatrix();
@@ -74,4 +69,7 @@ private:
 	D3DXMATRIX m_CameraView;
 
 	float m_fRotationSpeed;
+
+	float m_fScreenWidth ;
+	float m_fScreenHeight ;
 };

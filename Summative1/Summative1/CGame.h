@@ -12,11 +12,6 @@
 // Mail : Jc.Fowles@mediadesign.school.nz 
 //
 
-//Library Includes
-#include <windows.h>
-#include <d3d9.h>
-#include <d3dx9.h>
-
 //Local Includes
 #include "Mesh.h"
 #include "C3DObject.h"
@@ -33,7 +28,8 @@ public:
 
 	~CGame(void);
 
-	void Initialize(HWND _hWnd);    //Initializes the Direct3D
+	void Initialize(HWND _hWnd, int m_iScreenWidth, int m_iScreenHeight);    //Initializes the Direct3D
+	
 	
 	void Draw();
 	void Process(float _fDeltaTick);
@@ -49,6 +45,12 @@ public:
 
 	D3DXVECTOR3* GetCameraPosition();
 	void SetCameraPosition(D3DXVECTOR3 _CameraPosition);
+	
+	COLORREF GetRandomColor();
+	D3DXVECTOR3* GetLookAt();
+	void SetLookAt(D3DXVECTOR3 _LookAt);
+
+	void Release();
 
 protected:
 	CGame();
@@ -78,5 +80,12 @@ private:
 	D3DXVECTOR3 m_CameraPosition;
 	D3DXVECTOR3 m_LookUp;
 	D3DXVECTOR3 m_LookAt;
+
+
+	float m_fScreenWidth ;
+	float m_fScreenHeight ;
+
+	float m_fCubeSize;
+	float m_fAspect;
 };
 

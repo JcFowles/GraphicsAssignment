@@ -12,13 +12,12 @@
 // Mail : Jc.Fowles@mediadesign.school.nz 
 //
 
+
 //Library includes
-#include <iostream>
-#include <conio.h>
-#include <vector>
 #include <ctime>
 #include <windows.h>
 #include <windowsx.h>
+#include "vld.h"
 
 //Local includes
 #include "CGame.h"
@@ -28,7 +27,6 @@
 
 
 using namespace std;
-//CGame g_rGame = CGame::GetInstance();
 
 /***********************
 * WindowProc: This is the message handler for the Window, 
@@ -45,6 +43,11 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 	//Procces the given message
     switch(_uiMsg)
     {
+	case WM_ACTIVATEAPP:
+		{
+
+		}
+		break;
         //Closing the window
         case WM_DESTROY:
             {
@@ -56,6 +59,13 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 			{
 				switch(_wParam)
 				{
+				case VK_ESCAPE:
+					{
+						//Send message to close the entire application
+						PostQuitMessage(0);
+						return 0;
+					}
+					break;
 				case VK_NUMPAD1:
 					{
 						CGame::GetInstance().ToggleFillMode();
@@ -68,11 +78,58 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 					break;
 				case VK_LEFT:
 					{
+						D3DXVECTOR3 LookAt;
+						LookAt = *(CGame::GetInstance().GetLookAt());
+						LookAt.x += -1;
+						(CGame::GetInstance().SetLookAt(LookAt));
+						
+						D3DXVECTOR3 CamPos;
+						CamPos = *(CGame::GetInstance().GetCameraPosition());
+						CamPos.x += -1;
+						(CGame::GetInstance().SetCameraPosition(CamPos));
+
+					}
+					break;
+				case VK_RIGHT:
+					{
+						
+						D3DXVECTOR3 LookAt;
+						LookAt = *(CGame::GetInstance().GetLookAt());
+						LookAt.x += 1;
+						(CGame::GetInstance().SetLookAt(LookAt));
+						
 						D3DXVECTOR3 CamPos;
 						CamPos = *(CGame::GetInstance().GetCameraPosition());
 						CamPos.x += 1;
 						(CGame::GetInstance().SetCameraPosition(CamPos));
+						
+					}
+					break;
+				case VK_UP:
+					{
+						D3DXVECTOR3 LookAt;
+						LookAt = *(CGame::GetInstance().GetLookAt());
+						LookAt.y += -1;
+						(CGame::GetInstance().SetLookAt(LookAt));
+						
+						D3DXVECTOR3 CamPos;
+						CamPos = *(CGame::GetInstance().GetCameraPosition());
+						CamPos.y += -1;
+						(CGame::GetInstance().SetCameraPosition(CamPos));
 
+					}
+					break;
+				case VK_DOWN:
+					{
+						D3DXVECTOR3 LookAt;
+						LookAt = *(CGame::GetInstance().GetLookAt());
+						LookAt.y += 1;
+						(CGame::GetInstance().SetLookAt(LookAt));
+						
+						D3DXVECTOR3 CamPos;
+						CamPos = *(CGame::GetInstance().GetCameraPosition());
+						CamPos.y += 1;
+						(CGame::GetInstance().SetCameraPosition(CamPos));
 					}
 					break;
 				}
@@ -125,11 +182,11 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LP
 	//Create the window and return the result as the handle
 	HWND hWnd;
 	
-	//Non-Full Screen
+	////Non-Full Screen
 	hWnd = CreateWindowEx(	NULL,												// Extend style.
 							WINDOW_CLASS_NAME,									// Class.		
 							_pcTitle,											// Title.
-							WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_VISIBLE,	//Window stlye
+							WS_OVERLAPPEDWINDOW | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_VISIBLE,	//Window stlye
 							CW_USEDEFAULT, CW_USEDEFAULT,						// Initial x,y.
 							_iWidth, _iHeight,									// Initial width, height.
 							NULL,												// Handle to parent.
@@ -177,8 +234,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 	srand ((unsigned int)time(NULL));
 
 	//Screen Resolution
-	const int kiWidth = 1920; //500
-	const int kiHeight = 1200; //400
+	const int kiWidth = 1680; 
+	const int kiHeight = 1050;
 	
 	//This holds Windows event messages
 	MSG msg;
@@ -193,9 +250,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
     ShowWindow(hWnd, _iCmdshow);
 
 	//Create and initialize the Direct3D Device
-	CGame& g_rGame = CGame::GetInstance();
+	CGame& rGame = CGame::GetInstance();
 
-	g_rGame.Initialize(hWnd);
+	rGame.Initialize(hWnd, kiWidth, kiHeight);
 			
 
 	while (msg.message != WM_QUIT)
@@ -208,9 +265,14 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		else
 		{
 			//Render a single frame
-			g_rGame.RenderFrame();		
+			rGame.RenderFrame();		
 		}
 	}
+
+	//rGame.Release();
+	//Destroy the game instance
+	rGame.DestroyInstance();
+
 
     // return this part of the WM_QUIT message to Windows
     return msg.wParam;
