@@ -42,7 +42,6 @@ CGame::~CGame(void)
 	m_pD3DInterface = 0;
 	m_pD3DDevice->Release();
 	m_pD3DDevice = 0;
-	
 }
 
 /***********************
@@ -71,21 +70,6 @@ void CGame::DestroyInstance()
 }
 
 /***********************
-* Release: Releases the D3DirectX objects
-* @author: Jc Fowles
-* @return: void
-********************/
-void CGame::Release()
-{
-
-	m_pCubeMesh->Release();
-	m_pD3DDevice->Release();
-	m_pD3DDevice = 0;
-	m_pD3DInterface->Release();  
-	m_pD3DInterface = 0;
-}
-
-/***********************
 * InitizeD3D: Initializes the Game instance
 * @author: Jc Fowles
 * @parameter: _hWnd: Handle to the window
@@ -106,8 +90,6 @@ void CGame::Initialize(HWND _hWnd, int _iScreenWidth, int _iScreenHeight)
 	m_fScreenWidth = (float)_iScreenWidth;
 	m_fScreenHeight = (float)_iScreenHeight;
 
-	m_fAspect = m_fScreenWidth/m_fScreenHeight;
-		
 	//Create the Device
 	m_pD3DInterface = Direct3DCreate9(D3D_SDK_VERSION);	
 	
@@ -118,15 +100,15 @@ void CGame::Initialize(HWND _hWnd, int _iScreenWidth, int _iScreenHeight)
 	ZeroMemory(&D3DPresentParameter, sizeof(D3DPRESENT_PARAMETERS));	//Clears up memory to be used
 	
 	//Windowed Mode
-	D3DPresentParameter.Windowed = TRUE;
+	//D3DPresentParameter.Windowed = FALSE;								//Program is Full Screen
 	//FullScreen Mode
-	//D3DPresentParameter.Windowed = FALSE;							//Program is Full Screen//Program is Windowed
-	D3DPresentParameter.SwapEffect = D3DSWAPEFFECT_DISCARD;			//Gets rid of old frames
-	D3DPresentParameter.hDeviceWindow = _hWnd;						//The window that direct#D will use
-	D3DPresentParameter.BackBufferFormat = D3DFMT_X8R8G8B8;			//Set the back buffer format to 32-bit
-	D3DPresentParameter.BackBufferWidth = (UINT)m_fScreenWidth;				//Set the width of the buffer
-	D3DPresentParameter.BackBufferHeight =(UINT)m_fScreenHeight;			//Set the height of the buffer
-	D3DPresentParameter.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES ;
+	D3DPresentParameter.Windowed = TRUE;								//Program is Windowed
+	D3DPresentParameter.SwapEffect = D3DSWAPEFFECT_DISCARD;				//Gets rid of old frames
+	D3DPresentParameter.hDeviceWindow = _hWnd;							//The window that DirectX will use
+	D3DPresentParameter.BackBufferFormat = D3DFMT_X8R8G8B8;				//Set the backbuffer format to 32-bit color
+	D3DPresentParameter.BackBufferWidth = (UINT)m_fScreenWidth;			//Set the width of the buffer
+	D3DPresentParameter.BackBufferHeight =(UINT)m_fScreenHeight;		//Set the height of the buffer
+	D3DPresentParameter.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES ;	
 
 	//Create the device Using the set device information
 	m_pD3DInterface->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
@@ -148,7 +130,7 @@ void CGame::Initialize(HWND _hWnd, int _iScreenWidth, int _iScreenHeight)
 	m_LookUp = D3DXVECTOR3 (0.0f, 1.0f, 0.0f);
 	m_LookAt = D3DXVECTOR3 (0.f, 0.0f, 1.0f);
 	
-	//Right Cube
+	//Left Cube
 	C3DObject objCube1 = C3DObject(m_fScreenWidth,m_fScreenHeight);
 	objCube1.Initialise(m_pCubeMesh, m_pD3DDevice,&m_CameraView, -1*fFromCentre, 0, 0);
 	objCube1.SetTilt(0, 0, 0);
@@ -157,10 +139,10 @@ void CGame::Initialize(HWND _hWnd, int _iScreenWidth, int _iScreenHeight)
 
 	m_vectObject.push_back(objCube1);
 
-	//Left Cube
+	//Right Cube
 	C3DObject objCube2 = C3DObject(m_fScreenWidth,m_fScreenHeight);
 	objCube2.Initialise(m_pCubeMesh, m_pD3DDevice,&m_CameraView, fFromCentre, 0, 0);
-	objCube2.SetTilt(0, 0, 90);
+	objCube2.SetTilt(0, 0, 0);
 	objCube2.SetYaw(1.0f);
 	objCube2.SetSpeed(180.0f);
 
@@ -255,23 +237,24 @@ CMesh* CGame::CreateMesh()
 
 	vector<CPolygon> vectPolygons;
 	
+	//Create the front vertecises
 	CVertex vertA = CVertex(-m_fCubeSize/2, m_fCubeSize/2, -m_fCubeSize/2);
-	vertA.SetColor(GetRandomColor());
+	vertA.SetColor(255,0,0);
 	CVertex vertB = CVertex(m_fCubeSize/2, m_fCubeSize/2, -m_fCubeSize/2);
-	vertB.SetColor(GetRandomColor());
+	vertB.SetColor(0,255,0);
 	CVertex vertC = CVertex(m_fCubeSize/2, -m_fCubeSize/2, -m_fCubeSize/2);
-	vertC.SetColor(GetRandomColor());
+	vertC.SetColor(0,0,255);
 	CVertex vertD = CVertex(-m_fCubeSize/2, -m_fCubeSize/2, -m_fCubeSize/2);
-	vertD.SetColor(GetRandomColor());
-
+	vertD.SetColor(255,255,0);
+	//Create the back vertecises
 	CVertex vertE = CVertex(-m_fCubeSize/2, m_fCubeSize/2, m_fCubeSize/2);
-	vertE.SetColor(GetRandomColor());
+	vertE.SetColor(255,165,0);
 	CVertex vertF = CVertex(m_fCubeSize/2, m_fCubeSize/2, m_fCubeSize/2);
-	vertF.SetColor(GetRandomColor());
+	vertF.SetColor(138,43,226);
 	CVertex vertG = CVertex(m_fCubeSize/2, -m_fCubeSize/2, m_fCubeSize/2);
-	vertG.SetColor(GetRandomColor());
+	vertG.SetColor(255,127,0);
 	CVertex vertH = CVertex(-m_fCubeSize/2, -m_fCubeSize/2, m_fCubeSize/2);
-	vertH.SetColor(GetRandomColor());
+	vertH.SetColor(0,0,0);
 		
 	//CubeFaceA
 	vectPolygons.push_back(CPolygon(&vertA, &vertB, &vertC));
@@ -332,7 +315,7 @@ CMesh* CGame::CreateMesh()
 	 return m_pD3DDevice;
  }
 
- /***********************
+/***********************
 * ToggleShader: Toggles between Flat shader and Gouraud shader
 * @author: Jc Fowles
 * @return: void
@@ -351,7 +334,7 @@ void CGame::ToggleShader()
 	}
 }
 
-  /***********************
+/***********************
 * ToggleFillMode: Toggles between Solid Fill mode and wireframe fill mode
 * @author: Jc Fowles
 * @return: void
@@ -373,25 +356,43 @@ void CGame::ToggleFillMode()
 	
 }
 
-
+/***********************
+* GetCameraPosition: Returns the cameras current position
+* @author: Jc Fowles
+* @return: D3DXVECTOR3*: cameras postion as a D3DVECTOR3
+********************/
 D3DXVECTOR3* CGame::GetCameraPosition()
 {
 	return &m_CameraPosition;
 }
 
-
+/***********************
+* SetCameraPosition: Sets the cameras position
+* @author: Jc Fowles
+* @parameter: _CameraPosition: The new position you want to set the camera to 
+* @return: void
+********************/
 void CGame::SetCameraPosition(D3DXVECTOR3 _CameraPosition)
 {
 	m_CameraPosition = _CameraPosition;
 }
 
-
+/***********************
+* GetLookAt: Returns where the camera is looking (the look at vector)
+* @author: Jc Fowles
+* @return: D3DXVECTOR3*: Returns the cameras look at vector as a D3DVECTOR3
+********************/
 D3DXVECTOR3* CGame::GetLookAt()
 {
 	return &m_LookAt;
 }
 
-
+/***********************
+* SetLookAt: Sets where the camera is looking, its look at vector
+* @author: Jc Fowles
+* @parameter: _LookAt: The new look at vector for the camera to look at
+* @return: void
+********************/
 void CGame::SetLookAt(D3DXVECTOR3 _LookAt)
 {
 	m_LookAt = _LookAt;

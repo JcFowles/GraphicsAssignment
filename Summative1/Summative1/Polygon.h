@@ -31,11 +31,7 @@ public:
 	~CPolygon();
 		
 	void AddVertex(CVertex* _pVert);
-
 	vector<CVertex>* GetVertices();
-
-	void Draw(D3DXMATRIX _WorldMatrix);//based on world matrix
-	
 
 private:
 	// Member Variables

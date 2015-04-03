@@ -11,13 +11,13 @@
 // Author : Jc Fowles 
 // Mail : Jc.Fowles@mediadesign.school.nz 
 //
-
+#pragma comment( lib, "winmm.lib" )
 
 //Library includes
 #include <ctime>
 #include <windows.h>
 #include <windowsx.h>
-#include "vld.h"
+//#include "vld.h"
 
 //Local includes
 #include "CGame.h"
@@ -61,6 +61,7 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 				{
 				case VK_ESCAPE:
 					{
+						
 						//Send message to close the entire application
 						PostQuitMessage(0);
 						return 0;
@@ -68,67 +69,103 @@ LRESULT CALLBACK WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lPa
 					break;
 				case VK_NUMPAD1:
 					{
-						CGame::GetInstance().ToggleFillMode();
+						//Toggle the Fill mode between solid and Wire frame
+						if (((_lParam >> 30) & 1) != 1)
+						{
+							CGame::GetInstance().ToggleFillMode();
+						}
 					}
 					break;
 				case VK_NUMPAD2:
 					{
-						CGame::GetInstance().ToggleShader();
+						//Toggle the shader between flat and gouraud
+						if (((_lParam >> 30) & 1) != 1)
+						{
+							CGame::GetInstance().ToggleShader();
+						}
 					}
 					break;
 				case VK_LEFT:
 					{
+						//Move the camera position and look at towards the Left
+
 						D3DXVECTOR3 LookAt;
 						LookAt = *(CGame::GetInstance().GetLookAt());
-						LookAt.x += -1;
+						if(LookAt.x > -3)
+						{
+							LookAt.x += -1;
+						}
 						(CGame::GetInstance().SetLookAt(LookAt));
 						
 						D3DXVECTOR3 CamPos;
 						CamPos = *(CGame::GetInstance().GetCameraPosition());
-						CamPos.x += -1;
+						if(CamPos.x > -3)
+						{
+							CamPos.x += -1;
+						}
 						(CGame::GetInstance().SetCameraPosition(CamPos));
-
 					}
 					break;
 				case VK_RIGHT:
 					{
-						
+						//Move the camera position and look at towards the Right
+
 						D3DXVECTOR3 LookAt;
 						LookAt = *(CGame::GetInstance().GetLookAt());
-						LookAt.x += 1;
+						if(LookAt.x < 3)
+						{
+							LookAt.x += 1;
+						}
 						(CGame::GetInstance().SetLookAt(LookAt));
 						
 						D3DXVECTOR3 CamPos;
 						CamPos = *(CGame::GetInstance().GetCameraPosition());
-						CamPos.x += 1;
+						if(CamPos.x < 3)
+						{
+							CamPos.x += 1;
+						}
 						(CGame::GetInstance().SetCameraPosition(CamPos));
-						
 					}
 					break;
 				case VK_UP:
 					{
+						//Move the camera position and look at Upward
+
 						D3DXVECTOR3 LookAt;
 						LookAt = *(CGame::GetInstance().GetLookAt());
-						LookAt.y += -1;
+						if(LookAt.y < 3)
+						{
+							LookAt.y += 1;
+						}
 						(CGame::GetInstance().SetLookAt(LookAt));
 						
 						D3DXVECTOR3 CamPos;
 						CamPos = *(CGame::GetInstance().GetCameraPosition());
-						CamPos.y += -1;
+						if(CamPos.y < 3)
+						{
+							CamPos.y += 1;
+						}
 						(CGame::GetInstance().SetCameraPosition(CamPos));
-
 					}
 					break;
 				case VK_DOWN:
 					{
+						//Move the camera position and look at Downward
+
 						D3DXVECTOR3 LookAt;
 						LookAt = *(CGame::GetInstance().GetLookAt());
-						LookAt.y += 1;
+						if(LookAt.y > -3)
+						{
+							LookAt.y += -1;
+						}
 						(CGame::GetInstance().SetLookAt(LookAt));
 						
 						D3DXVECTOR3 CamPos;
 						CamPos = *(CGame::GetInstance().GetCameraPosition());
-						CamPos.y += 1;
+						if(CamPos.y > -3)
+						{
+							CamPos.y += -1;
+						}
 						(CGame::GetInstance().SetCameraPosition(CamPos));
 					}
 					break;
@@ -182,7 +219,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LP
 	//Create the window and return the result as the handle
 	HWND hWnd;
 	
-	////Non-Full Screen
+	//Non-Full Screen
 	hWnd = CreateWindowEx(	NULL,												// Extend style.
 							WINDOW_CLASS_NAME,									// Class.		
 							_pcTitle,											// Title.
@@ -196,7 +233,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LP
 	
 
 	//Full Screen
-	hWnd = CreateWindowEx(	NULL,												// Extend style.
+	/*hWnd = CreateWindowEx(	NULL,												// Extend style.
 							WINDOW_CLASS_NAME,									// Class.		
 							_pcTitle,											// Title.
 							WS_EX_TOPMOST | WS_POPUP,							// Window stlye (fullscreen values)
@@ -206,7 +243,7 @@ HWND CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LP
 							NULL,												// Handle to menu.
 							_hInstance,											// Instance of this application.
 							NULL);												// Extra creation parameters.
-	
+	*/
 
 	//Check if window was created succesfully
 	if (!hWnd)
@@ -269,7 +306,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdl
 		}
 	}
 
-	//rGame.Release();
 	//Destroy the game instance
 	rGame.DestroyInstance();
 

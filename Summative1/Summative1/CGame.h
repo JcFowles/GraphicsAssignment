@@ -29,11 +29,9 @@ public:
 	~CGame(void);
 
 	void Initialize(HWND _hWnd, int m_iScreenWidth, int m_iScreenHeight);    //Initializes the Direct3D
-	
-	
+		
 	void Draw();
 	void Process(float _fDeltaTick);
-	
 	void RenderFrame(void);				//Renders a single frame
 	
 	void DrawObjects();
@@ -45,12 +43,9 @@ public:
 
 	D3DXVECTOR3* GetCameraPosition();
 	void SetCameraPosition(D3DXVECTOR3 _CameraPosition);
-	
-	COLORREF GetRandomColor();
 	D3DXVECTOR3* GetLookAt();
 	void SetLookAt(D3DXVECTOR3 _LookAt);
-
-	void Release();
+	COLORREF GetRandomColor();
 
 protected:
 	CGame();
@@ -63,7 +58,6 @@ private:
 	static CGame* s_pGame;
 
 	CClock* m_pClock;
-	//HWND m_hMainWindow;
 
 	IDirect3D9* m_pD3DInterface;
 	IDirect3DDevice9* m_pD3DDevice;
@@ -80,12 +74,10 @@ private:
 	D3DXVECTOR3 m_CameraPosition;
 	D3DXVECTOR3 m_LookUp;
 	D3DXVECTOR3 m_LookAt;
-
-
+	
 	float m_fScreenWidth ;
 	float m_fScreenHeight ;
 
 	float m_fCubeSize;
-	float m_fAspect;
 };
 

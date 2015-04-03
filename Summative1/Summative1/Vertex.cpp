@@ -139,7 +139,7 @@ void CVertex::SetZ(float _f)
 void CVertex::SetColor(int _iR, int _iG, int _iB)
 {
 	COLORREF newColor;
-	newColor = RGB(_iR, _iG, _iB);
+	newColor = D3DCOLOR_XRGB(_iR, _iG, _iB);
 	m_color = newColor;
 }
 
