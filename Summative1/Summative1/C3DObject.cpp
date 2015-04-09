@@ -62,6 +62,8 @@ bool C3DObject::Initialise(CMesh* _pMesh, IDirect3DDevice9* _d3dDev, D3DXMATRIX*
 	m_fRotationPitch = 0.0f;
 	m_fRotationRoll = 0.0f;
 
+	//m_pMesh->ReadyVertexBuffer(m_pD3DDevice);
+		
 	return true;
 }
 
@@ -213,25 +215,43 @@ void C3DObject::CalcTransformMatrix()
 	
 	//Set the world matrix to the identity, reset the world matrix 	
     D3DXMatrixIdentity(&m_matWorld);  
-		
+	/*D3DXMatrixIdentity(&RotateX);  
+	D3DXMatrixIdentity(&RotateY);  
+	D3DXMatrixIdentity(&RotateZ);  */
+	
 	//Translate the Cube
 	D3DXMATRIX translateMat;
+	//D3DXMatrixIdentity(&translateMat); 
 	D3DXMatrixTranslation(&translateMat, m_fX, m_fY, m_fZ);
-	
+
+
 	//Rotate the Cube
-	D3DXMatrixRotationYawPitchRoll(&m_matWorld, m_fTiltYAxis, m_fTiltXAxis, m_fTiltZAxis);
 	
-	//Combine THe translation with the rotation 
+	/*if(m_fRotationRoll > 0)
+	{
+		D3DXMatrixRotationY(&RotateY, m_fTiltYAxis);
+		D3DXMatrixRotationX(&RotateX, m_fTiltXAxis);
+		D3DXMatrixRotationZ(&RotateZ, m_fTiltZAxis);
+		m_matWorld = RotateY*RotateX*RotateZ;
+	}
+	
+
+	if(m_fRotationYaw > 0)
+	{*/
+		D3DXMatrixRotationYawPitchRoll(&m_matWorld, m_fTiltYAxis, m_fTiltXAxis, m_fTiltZAxis);
+	//}
+		
 	m_matWorld *= translateMat;
 	float fAspectRatio = m_fScreenWidth/m_fScreenHeight;
 
 	//Calculate the Projection matrix of our D3D Device
     D3DXMATRIX matProjection;
 	D3DXMatrixPerspectiveFovLH(&matProjection,
-                               D3DXToRadian(45*fAspectRatio),	//Tthe horizontal field of view
-                               (FLOAT)fAspectRatio,				//Aspect ratio
-                               1.0f,							//The near view-plane
-                               10000.0f);						//The far view-plane
+                               D3DXToRadian(45*fAspectRatio),									//Tthe horizontal field of view
+                               (FLOAT)fAspectRatio,		//Aspect ratio
+                               1.0f,												//The near view-plane
+                               10000.0f);											//The far view-plane
+
 
     //Set the world matrix of our D3D Device
     m_pD3DDevice->SetTransform(D3DTS_WORLD, &m_matWorld);
@@ -240,5 +260,5 @@ void C3DObject::CalcTransformMatrix()
     m_pD3DDevice->SetTransform(D3DTS_VIEW, &m_CameraView);	
 	
 	//Set the Projection matrix of our D3D Device
-    m_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProjection);
+    m_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
 }

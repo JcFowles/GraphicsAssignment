@@ -13,12 +13,9 @@
 //
 
 #pragma once
-#pragma comment( lib, "d3dx9.lib" )
-#pragma comment( lib, "d3d9.lib" )
+
 // Library Includes
-
 #include <d3dx9.h>
-
 
 class CVertex
 {

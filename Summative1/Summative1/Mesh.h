@@ -24,7 +24,8 @@ public:
 	// Member Functions
 	CMesh();
 	~CMesh();
-	
+	void Release();
+
 	void AddPolygon(CPolygon* _pPolygon);
 	vector<CPolygon>* GetPolygons();
 	vector<CVertex> GetVertices();

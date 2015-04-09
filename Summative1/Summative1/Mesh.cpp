@@ -38,6 +38,17 @@ CMesh::~CMesh()
 }
 
 /***********************
+* Release: Releases the D3DirectX objects
+* @author: Jc Fowles
+* @return: void
+********************/
+void CMesh::Release()
+{
+	m_pD3DVertexBuffer->Release();
+	m_pD3DVertexBuffer = 0;
+}
+
+/***********************
 * AddPolygon: Adds a polygon to the mesh
 * @author: Jc Fowles
 * @parameter: _pPolygon: Pointer to the polygon to be added
@@ -78,7 +89,7 @@ void CMesh::Draw(IDirect3DDevice9* _pD3DDevice)
 {
 	int iNumOfPolygons = (GetVertices().size())/3;
 	
-	//Set the vertex format
+	// Set the vertex format
     _pD3DDevice->SetFVF((D3DFVF_XYZ | D3DFVF_DIFFUSE));
 
     //Set the display vertex buffer to our vertex buffer of cube vertices
@@ -102,6 +113,7 @@ void CMesh::SetVertices()
 		for( unsigned int k = 0; k < (*(m_vecPolygons)[i].GetVertices()).size(); k++)
 		//Loop through all Polygons Vertices
 		{
+			//(*(m_vecPolygons)[i].GetVertices())[k].SetColor(CGame::GetInstance().GetRandomColor());
 			m_vectAllVertices.push_back( (*(m_vecPolygons)[i].GetVertices())[k]);
 		}
 	}
